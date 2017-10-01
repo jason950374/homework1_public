@@ -43,7 +43,7 @@ gaussian_filter = gauss2D(shape=(cutoff_frequency*4+1,cutoff_frequency*4+1), sig
 # Remove the high frequencies from image1 by blurring it. The amount of #
 # blur that works best will vary with different image pairs             #
 #########################################################################
-#low_frequencies = 
+low_frequencies = my_imfilter(image1, gaussian_filter)
 
 
 ############################################################################
@@ -51,13 +51,15 @@ gaussian_filter = gauss2D(shape=(cutoff_frequency*4+1,cutoff_frequency*4+1), sig
 # subtract a blurred version of image2 from the original version of image2.#
 # This will give you an image centered at zero with negative values.       #
 ############################################################################
-#high_frequencies = 
+pulse = np.zeros_like(gaussian_filter)
+pulse[cutoff_frequency*2 + 1,cutoff_frequency*2 + 1] = 1
+high_frequencies = my_imfilter(image2, pulse - gaussian_filter)
 
 
 ############################################################################
 # Combine the high frequencies and low frequencies                         #
 ############################################################################
-#hybrid_image = 
+hybrid_image = np.clip(high_frequencies + low_frequencies, 0, 1)
 
 
 
