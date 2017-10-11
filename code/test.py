@@ -18,23 +18,20 @@ import matplotlib.pyplot as plt
 import os
 
 ''' set up '''
-test_image = np.zeros([50,50,3])
-for i in range(test_image.shape[0]):
-    for j in range(test_image.shape[1]):
-        if((i+j)%2):
-            test_image[i,j] = (i + j)/2
-        else:
-            test_image[i,j] = 50 - (i + j)/2
-            
-test_image = test_image.astype(np.single)/50
+main_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+img_path = main_path + '/data/cat.bmp'
+test_image = mpimg.imread(img_path)
+test_image = imresize(test_image,0.7,'bilinear')
+test_image = test_image.astype(np.single)/255
 plt.figure('Image')
 plt.imshow(test_image)
 
-shift_filter = np.array([[0,0,0],[1,0,0],[0,0,0]])
-shift_image  = my_imfilter(test_image, shift_filter)
-
-plt.figure('shift image')
-plt.imshow(shift_image)
-
+''' Large blur '''
+#This blur would be slow to do directly, so we instead use the fact that
+#Gaussian blurs are separable and blur sequentially in each direction.
+# large_2d_blur_filter = gauss2D(shape=(25,25), sigma = 10)
+test = pad2(test_image, (25,25), 0, 0)
+plt.figure('Gauss filter')
+plt.imshow(normalize(test))
 
 plt.show()

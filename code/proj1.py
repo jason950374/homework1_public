@@ -60,8 +60,7 @@ high_frequencies = my_imfilter(image2, pulse - gaussian_filter)
 # Combine the high frequencies and low frequencies                         #
 ############################################################################
 hybrid_image = np.clip(high_frequencies + low_frequencies, 0, 1)
-
-
+hybrid_image2 = np.clip(np.sqrt((high_frequencies + 0.5) * low_frequencies), 0, 1)
 
 ''' Visualize and save outputs '''
 plt.figure(1)
@@ -71,6 +70,8 @@ plt.imshow(high_frequencies+0.5)
 vis = vis_hybrid_image(hybrid_image)
 plt.figure(3)
 plt.imshow(vis)
+plt.figure(4)
+plt.imshow(vis_hybrid_image(hybrid_image2))
 plt.imsave(main_path+'/results/low_frequencies.png', low_frequencies, 'quality', 95)
 plt.imsave(main_path+'/results/high_frequencies.png', high_frequencies + 0.5, 'quality', 95)
 plt.imsave(main_path+'/results/hybrid_image.png', hybrid_image, 'quality', 95)

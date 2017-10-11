@@ -40,9 +40,9 @@ def pad2(image, shape, i, j,  mode = 'reflect'):
             image_new[row_end2:, clm_begin2:clm_end2, :] = image[:row_end2-1:-1, clm_begin:clm_end,:]
 
         if(j < shape[1]//2):
-            image_new[:, :clm_begin2, :] = image_new[:, clm_begin2:clm_begin2*2, :]
+            image_new[:, :clm_begin2, :] = image_new[:, clm_begin2*2 - 1:clm_begin2 - 1:-1, :]
         elif(j > shape[1]//2):
-            image_new[:, clm_end2:, :] = image_new[:, clm_end2-(j - shape[1]//2):clm_end2, :]
+            image_new[:, clm_end2:, :] = image_new[:, clm_end2 - 1:clm_end2-(j - shape[1]//2) - 1:-1, :]
         
     
     return image_new
