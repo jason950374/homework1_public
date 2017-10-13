@@ -14,9 +14,11 @@ import os
 
 ''' Setup '''
 # read images and convert to floating point format
+name1 = 'submarine'
+name2 = 'fish'
 main_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-image1 = mpimg.imread(main_path + '/data/dog.bmp')
-image2 = mpimg.imread(main_path + '/data/cat.bmp')
+image1 = mpimg.imread(main_path + '/data/'+ name1 + '.bmp')
+image2 = mpimg.imread(main_path + '/data/'+ name2 + '.bmp')
 image1 = image1.astype(np.single)/255
 image2 = image2.astype(np.single)/255
 
@@ -27,7 +29,7 @@ image2 = image2.astype(np.single)/255
 # you asign as image2 (which will provide the high frequencies)
 
 ''' Filtering and Hybrid Image construction '''
-cutoff_frequency = 7 # This is the standard deviation, in pixels, of the 
+cutoff_frequency = 4 # This is the standard deviation, in pixels, of the 
 # Gaussian blur that will remove the high frequencies from one image and 
 # remove the low frequencies from another image (by subtracting a blurred
 # version from the original version). You will want to tune this for every
@@ -43,7 +45,7 @@ gaussian_filter = gauss2D(shape=(cutoff_frequency*4+1,cutoff_frequency*4+1), sig
 # Remove the high frequencies from image1 by blurring it. The amount of #
 # blur that works best will vary with different image pairs             #
 #########################################################################
-low_frequencies = my_imfilter(image1, gaussian_filter)
+low_frequencies = np.clip(my_imfilter(image1, gaussian_filter), 0, 1)
 
 
 ############################################################################
@@ -53,14 +55,14 @@ low_frequencies = my_imfilter(image1, gaussian_filter)
 ############################################################################
 pulse = np.zeros_like(gaussian_filter)
 pulse[cutoff_frequency*2 + 1,cutoff_frequency*2 + 1] = 1
-high_frequencies = my_imfilter(image2, pulse - gaussian_filter)
+high_frequencies = np.clip(my_imfilter(image2, pulse - gaussian_filter), -0.5 ,0.5)
 
 
 ############################################################################
 # Combine the high frequencies and low frequencies                         #
 ############################################################################
-hybrid_image = np.clip(high_frequencies + low_frequencies, 0, 1)
-hybrid_image2 = np.clip(np.sqrt((high_frequencies + 0.5) * low_frequencies), 0, 1)
+hybrid_image = normalize(high_frequencies + low_frequencies)
+hybrid_image2 = normalize(np.sqrt((high_frequencies + 0.5) * low_frequencies))
 
 ''' Visualize and save outputs '''
 plt.figure(1)
@@ -71,9 +73,12 @@ vis = vis_hybrid_image(hybrid_image)
 plt.figure(3)
 plt.imshow(vis)
 plt.figure(4)
-plt.imshow(vis_hybrid_image(hybrid_image2))
-plt.imsave(main_path+'/results/low_frequencies.png', low_frequencies, 'quality', 95)
-plt.imsave(main_path+'/results/high_frequencies.png', high_frequencies + 0.5, 'quality', 95)
-plt.imsave(main_path+'/results/hybrid_image.png', hybrid_image, 'quality', 95)
-plt.imsave(main_path+'/results/hybrid_image_scales.png', vis, 'quality', 95)
+vis2 = vis_hybrid_image(hybrid_image2)
+plt.imshow(vis2)
+plt.imsave(main_path+'/results/low_frequencies_'+ name1 + '.png', low_frequencies, 'quality', 95)
+plt.imsave(main_path+'/results/high_frequencies_'+ name2 + '.png', high_frequencies + 0.5, 'quality', 95)
+plt.imsave(main_path+'/results/hybrid_image_'+ name1 + '_' +  name2 + '.png', hybrid_image, 'quality', 95)
+plt.imsave(main_path+'/results/hybrid_image_scales_'+ name1 + '_' +  name2 + '.png', vis, 'quality', 95)
+plt.imsave(main_path+'/results/hybrid_image2_'+ name1 + '_' +  name2 + '.png', hybrid_image2, 'quality', 95)
+plt.imsave(main_path+'/results/hybrid_image_scales2_'+ name1 + '_' +  name2 + '.png', vis2, 'quality', 95)
 plt.show()
