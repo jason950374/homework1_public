@@ -90,15 +90,15 @@ def my_imfilter(image, imfilter):
     # Uncomment if you want to simply call scipy.ndimage.filters.correlate so you can 
     # see the desired behavior.
 
-    print("###### time ######")
+    # print("###### time ######")
 
-    import scipy.ndimage as ndimage
-    tStart = time.time()
-    output_org = np.zeros_like(image)
-    for ch in range(image.shape[2]):
-        output_org[:,:,ch] = ndimage.filters.correlate(image[:,:,ch], imfilter, mode='reflect')
-    time_org = time.time() - tStart
-    print("time_org: " + str(time_org))
+   ##   import scipy.ndimage as ndimage
+    # tStart = time.time()
+    # output_org = np.zeros_like(image)
+    # for ch in range(image.shape[2]):
+    #     output_org[:,:,ch] = ndimage.filters.correlate(image[:,:,ch], imfilter, mode='reflect')
+    # time_org = time.time() - tStart
+    # print("time_org: " + str(time_org))
     
     ######################## ver 1 ##########################
     # tStart2 = time.time()
@@ -164,16 +164,16 @@ def my_imfilter(image, imfilter):
     # print("time_v4:" + str(time_v4))
     
     ######################## ver 5 ##########################
-    tStart6 = time.time()
+    # tStart6 = time.time()
     output_v5 = np.zeros_like(image)
     for i in range(imfilter.shape[0]):
         for j in range(imfilter.shape[1]):
             output_v5 += pad2(image, imfilter.shape, i, j, 'reflect') * imfilter[i, j]
     
-    time_v5 = time.time() - tStart6
-    print("time_v5:" + str(time_v5))
-    
-    print(np.max(abs(output_org - output_v5)))
+    # time_v5 = time.time() - tStart6
+    # print("time_v5:" + str(time_v5))
+    # 
+    # print(np.max(abs(output_org - output_v5)))
     
     ###################################################################################
     #                                 END OF YOUR CODE                                #
