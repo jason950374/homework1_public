@@ -111,7 +111,7 @@ pulse = np.zeros_like(gaussian_filter)
 pulse[cutoff_frequency*2 + 1,cutoff_frequency*2 + 1] = 1
 high_frequencies = my_imfilter(image2, pulse - gaussian_filter)
 ```
-Combine the high frequencies and low frequencies. Normalize is for insurance that value is between one to zero, and it's also insurance contrast 
+Combine the high frequencies and low frequencies. Normalization is for insurance that value is between one to zero, and it's also insurance contrast 
 ```
 hybrid_image = normalize(high_frequencies + low_frequencies)
 ```
